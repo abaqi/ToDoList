@@ -16,7 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+
+        //The functionality UserDefaults offers is very convenient and hence very dangerous.
+        //When people start getting into saving collections arrays of large amounts of data, it becomes unmanageable.
+        //UserDefaults is not a database and it should not be used as a database! Entire plist will be loaded whenever UserDeffaults is called.
+        //Using it too much can bring down your apps efficiency
+        //User Defaults is a SINGLETON
+        //Singleton: Only one copy of these can be shared across all of your classes and objects (static type?)
         //Print out the path for our file
         print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
         
