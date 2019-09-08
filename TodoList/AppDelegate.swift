@@ -23,8 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Using it too much can bring down your apps efficiency
         //User Defaults is a SINGLETON
         //Singleton: Only one copy of these can be shared across all of your classes and objects (static type?)
-        //Print out the path for our file
-        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
         
         return true
     }

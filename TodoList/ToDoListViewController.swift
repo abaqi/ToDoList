@@ -12,19 +12,21 @@ class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    let defaults = UserDefaults.standard  //Tapping into SINGLETON static type UserDefault
+    //let defaults = UserDefaults.standard  //Tapping into SINGLETON static type UserDefault
+    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
+        print(dataFilePath)
+        
+        loadItems()
         
 //        If default plist exisits, pull that make that the array
-        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-            itemArray = items
-        }
+//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
+//            itemArray = items
+//        }
         
     }
     
@@ -64,7 +66,7 @@ class ToDoListViewController: UITableViewController {
 
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        tableView.reloadData()
+        self.saveItems()
         
         //will keep cell from staying highlighted
         tableView.deselectRow(at: indexPath, animated: true)
@@ -89,9 +91,9 @@ class ToDoListViewController: UITableViewController {
             //what will happen ones the user clicks the add button
             //self.itemArray.append(textField.text!)
             //Save this updated array to our user defaults
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            
-            self.tableView.reloadData()
+            //self.defaults.set(self.itemArray, forKey: "TodoListArray") //abandoning ship to stop using user defaults. use defaults for only small tidbits
+            self.saveItems()
+        
         }
         
         alert.addTextField {(alertTextField) in
@@ -103,5 +105,29 @@ class ToDoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Eroro encoding item array")
+        }
+        
+        self.tableView.reloadData()
+    }
+    
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+            itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Erorr decoding item array")
+            }
+    }
 }
 
+
+}

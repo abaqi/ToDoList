@@ -8,7 +8,8 @@
 
 import Foundation
 
-class Item {
+class Item: Codable { //codable means encodable and decodable
+    // For a Class to be encodable, all of its attributes must be standard datatypes
     var title: String = ""
     var done: Bool = false
 }
